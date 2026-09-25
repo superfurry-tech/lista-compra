@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Lista da Compra</title>
     <style>
-        body { font-family: sans-serif; max-width: 550px; margin: 40px auto; padding: 20px; background-color: #f4f6f8; }
+        body {
+            font-family: sans-serif;
+            max-width: 550px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f4f6f8;
+        }
 
         /* Pantalla inicial de selección de nombre */
         #pantallaUsuario {
             background: white;
             padding: 25px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             text-align: center;
             margin-bottom: 20px;
         }
-        .botones-usuario { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
+
+        .botones-usuario {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
         .btn-usuario {
             padding: 12px 20px;
             background-color: #007bff;
@@ -26,23 +41,94 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .btn-usuario:hover { background-color: #0056b3; }
+
+        .btn-usuario:hover {
+            background-color: #0056b3;
+        }
 
         /* Panel principal de la lista */
-        #panelPrincipal { display: none; }
-        .saludo { color: #555; margin-bottom: 15px; font-size: 15px; font-weight: bold; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        .btn-add { padding: 12px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        #panelPrincipal {
+            display: none;
+        }
 
-        ul { list-style: none; padding: 0; }
-        li { background: white; padding: 12px 15px; margin-bottom: 8px; border-radius: 5px; border-left: 5px solid #007bff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .info-producto { display: flex; flex-direction: column; gap: 3px; }
-        .autor { font-size: 12px; color: #6c757d; font-style: italic; }
-        .comprado { text-decoration: line-through; opacity: 0.5; }
-        .btn-borrar { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .saludo {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-add {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: white;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-producto {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .autor {
+            font-size: 12px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .comprado {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .btn-borrar {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
     </style>
 </head>
+
 <body>
 
     <h2>🛒 Lista da Compra</h2>
@@ -63,7 +149,8 @@
         <div class="saludo" id="textoSaludo"></div>
 
         <div class="input-group">
-            <input type="text" id="nuevoProducto" placeholder="Ej: Leche, huevos, pan..." onkeypress="if(event.key === 'Enter') agregarProducto()">
+            <input type="text" id="nuevoProducto" placeholder="Ej: Leche, huevos, pan..."
+                onkeypress="if(event.key === 'Enter') agregarProducto()">
             <button class="btn-add" onclick="agregarProducto()">Añadir</button>
         </div>
 
@@ -73,10 +160,11 @@
     </div>
 
     <script>
+        // 1. Configuración de la API y Gestión de Usuarios
+        const API_URL = "http://toshiba-mx/lista-compra/api.php";
         let usuarioActual = '';
 
-        // Comprueba la memoria del dispositivo al abrir la página
-        window.onload = function() {
+        window.onload = function () {
             const nombreGuardado = localStorage.getItem('usuarioLista');
             if (nombreGuardado) {
                 iniciarApp(nombreGuardado);
@@ -84,7 +172,7 @@
         };
 
         function seleccionarUsuario(nombre) {
-            localStorage.setItem('usuarioLista', nombre); // Guarda en la memoria del navegador
+            localStorage.setItem('usuarioLista', nombre);
             iniciarApp(nombre);
         }
 
@@ -92,32 +180,124 @@
             usuarioActual = nombre;
             document.getElementById('pantallaUsuario').style.display = 'none';
             document.getElementById('panelPrincipal').style.display = 'block';
-            document.getElementById('textoSaludo').innerText = `👋🏼 Hola, ${usuarioActual}`;
+            document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual;
             document.getElementById('nuevoProducto').focus();
+
+            // Carga la lista inicial desde MariaDB
+            cargarProductos();
         }
 
-        function agregarProducto() {
+        // 📥 1. CONSULTAR LA BASE DE DATOS EN LA TOSHIBA
+        async function cargarProductos() {
+            try {
+                const res = await fetch(API_URL);
+                const productos = await res.json();
+                dibujarLista(productos);
+            } catch (error) {
+                console.error("Error al conectar con la Toshiba:", error);
+            }
+        }
+
+        // 🎨 2. DIBUJAR LOS PRODUCTOS EN PANTALLA
+        function dibujarLista(productos) {
+            const ul = document.getElementById('lista');
+            ul.innerHTML = ''; // Limpia la lista antes de redibujar
+
+            productos.forEach(function (prod) {
+                const li = document.createElement('li');
+                const estaComprado = (prod.comprado == 1);
+
+                let htmlProducto = '<div style="display: flex; align-items: center; gap: 10px;">';
+
+                // Casilla de verificación (Checkbox)
+                htmlProducto += '<input type="checkbox" ';
+                if (estaComprado) {
+                    htmlProducto += 'checked ';
+                }
+                htmlProducto += 'onchange="marcarProducto(' + prod.id + ', ' + (!estaComprado) + ')" ';
+                htmlProducto += 'style="width: 20px; height: 20px; cursor: pointer;" ';
+                htmlProducto += 'title="Marcar como comprado">';
+
+                // Nombre del producto (Tachado si está comprado)
+                htmlProducto += '<div class="info-producto" style="cursor: pointer;" onclick="marcarProducto(' + prod.id + ', ' + (!estaComprado) + ')">';
+
+                if (estaComprado) {
+                    htmlProducto += '<strong style="text-decoration: line-through; opacity: 0.5;">' + prod.nombre + '</strong>';
+                } else {
+                    htmlProducto += '<strong>' + prod.nombre + '</strong>';
+                }
+
+                // Nota de quién lo compró
+                if (estaComprado && prod.comprado_por) {
+                    htmlProducto += '<span class="autor" style="font-size: 0.8em; color: #777; display: block;">Comprado por: ' + prod.comprado_por + '</span>';
+                }
+
+                htmlProducto += '</div></div>';
+
+                // Botón de eliminar
+                htmlProducto += '<button class="btn-borrar" onclick="eliminarProducto(' + prod.id + ')">Borrar</button>';
+
+                li.innerHTML = htmlProducto;
+                ul.appendChild(li);
+            });
+        }
+
+        // ➕ 3. AÑADIR PRODUCTO A MARIADB
+        async function agregarProducto() {
             const input = document.getElementById('nuevoProducto');
             const texto = input.value.trim();
 
             if (texto === '') return;
 
-            const ul = document.getElementById('lista');
-            const li = document.createElement('li');
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'agregar', nombre: texto })
+                });
 
-            li.innerHTML = `
-                <div class="info-producto" onclick="this.classList.toggle('comprado')" style="cursor:pointer;" title="Haz clic para tachar">
-                    <strong>${texto}</strong>
-                    <span class="autor">Añadido por: ${usuarioActual}</span>
-                </div>
-                <button class="btn-borrar" onclick="this.parentElement.remove()">Borrar</button>
-            `;
+                input.value = '';
+                input.focus();
+                cargarProductos(); // Recarga desde la Toshiba
+            } catch (error) {
+                console.error("Error al añadir producto:", error);
+            }
+        }
 
-            ul.appendChild(li);
-            input.value = '';
-            input.focus();
+        // 📝 4. TACHAR / DESTECHAR PRODUCTO EN MARIADB
+        async function marcarProducto(id, nuevoEstadoComprado) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        accion: 'marcar',
+                        id: id,
+                        comprado: nuevoEstadoComprado,
+                        comprado_por: usuarioActual
+                    })
+                });
+                cargarProductos(); // Recarga desde la Toshiba
+            } catch (error) {
+                console.error("Error al marcar producto:", error);
+            }
+        }
+
+        // 🗑️ 5. ELIMINAR PRODUCTO DE MARIADB
+        async function eliminarProducto(id) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'eliminar', id: id })
+                });
+                cargarProductos(); // Recarga desde la Toshiba
+            } catch (error) {
+                console.error("Error al eliminar producto:", error);
+            }
         }
     </script>
 
 </body>
+
 </html>
