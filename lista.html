@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista da Compra</title>
+    <style>
+        body { font-family: sans-serif; max-width: 550px; margin: 40px auto; padding: 20px; background-color: #f4f6f8; }
+
+        /* Pantalla inicial de selección de nombre */
+        #pantallaUsuario {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .botones-usuario { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
+        .btn-usuario {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-usuario:hover { background-color: #0056b3; }
+
+        /* Panel principal de la lista */
+        #panelPrincipal { display: none; }
+        .saludo { color: #555; margin-bottom: 15px; font-size: 15px; font-weight: bold; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+        .btn-add { padding: 12px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
+
+        ul { list-style: none; padding: 0; }
+        li { background: white; padding: 12px 15px; margin-bottom: 8px; border-radius: 5px; border-left: 5px solid #007bff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .info-producto { display: flex; flex-direction: column; gap: 3px; }
+        .autor { font-size: 12px; color: #6c757d; font-style: italic; }
+        .comprado { text-decoration: line-through; opacity: 0.5; }
+        .btn-borrar { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <h2>🛒 Lista da Compra</h2>
+
+    <!-- 1. Pantalla de elección (solo se muestra si no se ha elegido nombre aún) -->
+    <div id="pantallaUsuario">
+        <h3>¿Quién eres?</h3>
+        <p style="color: #666; font-size: 14px;">Elige tu nombre una sola vez para este dispositivo:</p>
+        <div class="botones-usuario">
+            <button class="btn-usuario" onclick="seleccionarUsuario('Fran')">Fran</button>
+            <button class="btn-usuario" onclick="seleccionarUsuario('Lorena')">Lorena</button>
+            <button class="btn-usuario" onclick="seleccionarUsuario('Daniela')">Daniela</button>
+        </div>
+    </div>
+
+    <!-- 2. Panel principal de la lista -->
+    <div id="panelPrincipal">
+        <div class="saludo" id="textoSaludo"></div>
+
+        <div class="input-group">
+            <input type="text" id="nuevoProducto" placeholder="Ej: Leche, huevos, pan..." onkeypress="if(event.key === 'Enter') agregarProducto()">
+            <button class="btn-add" onclick="agregarProducto()">Añadir</button>
+        </div>
+
+        <ul id="lista">
+            <!-- Productos añadidos -->
+        </ul>
+    </div>
+
+    <script>
+        let usuarioActual = '';
+
+        // Comprueba la memoria del dispositivo al abrir la página
+        window.onload = function() {
+            const nombreGuardado = localStorage.getItem('usuarioLista');
+            if (nombreGuardado) {
+                iniciarApp(nombreGuardado);
+            }
+        };
+
+        function seleccionarUsuario(nombre) {
+            localStorage.setItem('usuarioLista', nombre); // Guarda en la memoria del navegador
+            iniciarApp(nombre);
+        }
+
+        function iniciarApp(nombre) {
+            usuarioActual = nombre;
+            document.getElementById('pantallaUsuario').style.display = 'none';
+            document.getElementById('panelPrincipal').style.display = 'block';
+            document.getElementById('textoSaludo').innerText = `👋🏼 Hola, ${usuarioActual}`;
+            document.getElementById('nuevoProducto').focus();
+        }
+
+        function agregarProducto() {
+            const input = document.getElementById('nuevoProducto');
+            const texto = input.value.trim();
+
+            if (texto === '') return;
+
+            const ul = document.getElementById('lista');
+            const li = document.createElement('li');
+
+            li.innerHTML = `
+                <div class="info-producto" onclick="this.classList.toggle('comprado')" style="cursor:pointer;" title="Haz clic para tachar">
+                    <strong>${texto}</strong>
+                    <span class="autor">Añadido por: ${usuarioActual}</span>
+                </div>
+                <button class="btn-borrar" onclick="this.parentElement.remove()">Borrar</button>
+            `;
+
+            ul.appendChild(li);
+            input.value = '';
+            input.focus();
+        }
+    </script>
+
+</body>
+</html>
