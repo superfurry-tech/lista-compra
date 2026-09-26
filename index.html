@@ -6,26 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista da Compra</title>
     <style>
-        /* 1. Control global de medidas para evitar desbordamientos laterales */
-        * {
+        \* {
             box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             max-width: 500px;
-            /* Ancho ideal tanto para pantalla móvil como escritorio */
             margin: 10px auto;
-            /* Reducido de 40px a 10px para ganar espacio vertical */
             padding: 10px;
             background-color: #f4f6f8;
         }
 
-        /* Pantalla inicial de selección de usuario */
         #pantallaUsuario {
             background: white;
-            padding: 20px 15px;
-            border-radius: 8px;
+            padding: 24px 18px;
+            border-radius: 10px;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
             text-align: center;
             margin-bottom: 15px;
@@ -33,43 +29,39 @@
 
         .botones-usuario {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 18px;
         }
 
         .btn-usuario {
-            flex: 1;
-            min-width: 110px;
-            padding: 12px 15px;
+            width: 100%;
+            padding: 14px 15px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            /* 16px evita el zoom automático en navegadores móviles */
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
             font-weight: bold;
+            transition: background-color 0.2s;
         }
 
         .btn-usuario:hover {
             background-color: #0056b3;
         }
 
-        /* Panel principal de la lista */
         #panelPrincipal {
             display: none;
         }
 
         .saludo {
             color: #555;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-size: 15px;
             font-weight: bold;
         }
 
-        /* Formulario compacto de entrada de producto */
         .input-group {
             display: flex;
             gap: 8px;
@@ -79,28 +71,25 @@
         input[type="text"] {
             flex: 1;
             min-width: 0;
-            /* Evita que el campo de texto se salga en pantallas estrechas */
-            padding: 10px 12px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
-            /* Evita zoom automático al pulsar en Android */
         }
 
         .btn-add {
-            padding: 10px 16px;
+            flex-shrink: 0;
+            padding: 12px 18px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 16px;
             white-space: nowrap;
-            /* Impide que la palabra "Añadir" se rompa en dos líneas */
         }
 
-        /* Lista compacta (caben ~12-15 elementos en pantalla vertical) */
         ul {
             list-style: none;
             padding: 0;
@@ -109,12 +98,10 @@
 
         li {
             background: white;
-            padding: 8px 12px;
-            /* Reducido para que la fila sea más compacta */
+            padding: 10px 12px;
             margin-bottom: 6px;
-            /* Menos separación entre filas */
             border-radius: 6px;
-            border-left: 4px solid #007bff;
+            border-left: 5px solid #007bff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -142,10 +129,10 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 6px 10px;
+            padding: 8px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -182,7 +169,7 @@
 
     <script>
         // 1. Configuración de la API y Gestión de Usuarios
-        const API_URL = "http://toshiba-mx/lista-compra/api.php";
+        const API_URL = "api.php";
         let usuarioActual = '';
 
         window.onload = function () {
