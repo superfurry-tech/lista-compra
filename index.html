@@ -3,24 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista da Compra</title>
     <style>
+        /* 1. Control global de medidas para evitar desbordamientos laterales */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
-            max-width: 550px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 500px;
+            /* Ancho ideal tanto para pantalla móvil como escritorio */
+            margin: 10px auto;
+            /* Reducido de 40px a 10px para ganar espacio vertical */
+            padding: 10px;
             background-color: #f4f6f8;
         }
 
-        /* Pantalla inicial de selección de nombre */
+        /* Pantalla inicial de selección de usuario */
         #pantallaUsuario {
             background: white;
-            padding: 25px;
+            padding: 20px 15px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .botones-usuario {
@@ -32,12 +40,15 @@
         }
 
         .btn-usuario {
-            padding: 12px 20px;
+            flex: 1;
+            min-width: 110px;
+            padding: 12px 15px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 16px;
+            /* 16px evita el zoom automático en navegadores móviles */
             cursor: pointer;
             font-weight: bold;
         }
@@ -53,61 +64,71 @@
 
         .saludo {
             color: #555;
-            margin-bottom: 15px;
-            font-size: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
             font-weight: bold;
         }
 
+        /* Formulario compacto de entrada de producto */
         .input-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         input[type="text"] {
             flex: 1;
-            padding: 12px;
+            min-width: 0;
+            /* Evita que el campo de texto se salga en pantallas estrechas */
+            padding: 10px 12px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 16px;
+            /* Evita zoom automático al pulsar en Android */
         }
 
         .btn-add {
-            padding: 12px 20px;
+            padding: 10px 16px;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
+            white-space: nowrap;
+            /* Impide que la palabra "Añadir" se rompa en dos líneas */
         }
 
+        /* Lista compacta (caben ~12-15 elementos en pantalla vertical) */
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
             background: white;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            border-left: 5px solid #007bff;
+            padding: 8px 12px;
+            /* Reducido para que la fila sea más compacta */
+            margin-bottom: 6px;
+            /* Menos separación entre filas */
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .info-producto {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
         }
 
         .autor {
-            font-size: 12px;
+            font-size: 11px;
             color: #6c757d;
             font-style: italic;
         }
@@ -121,7 +142,7 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
