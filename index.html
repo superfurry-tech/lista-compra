@@ -148,9 +148,13 @@
     <div id="pantallaPin" style="text-align: center; margin-top: 50px;">
         <h2>🔒 Acceso a Lista de la Compra</h2>
         <p>Introduce el PIN de tu hogar:</p>
-        <input type="password" id="inputPin" placeholder="Ej: 1234" maxlength="10"
-            style="padding: 10px; font-size: 1.2em; text-align: center; width: 150px; border-radius: 8px; border: 1px solid #ccc;">
-        <br><br>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 15px;">
+            <input type="password" id="inputPin" placeholder="Ej: 1234" maxlength="10"
+                style="padding: 10px; font-size: 1.2em; text-align: center; width: 150px; border-radius: 8px; border: 1px solid #ccc;">
+            <button type="button" onclick="toggleMostrarPin()"
+                style="padding: 8px 12px; font-size: 1.2em; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; cursor: pointer;"
+                title="Mostrar/Ocultar PIN">👁️</button>
+        </div>
         <button onclick="validarPin()"
             style="padding: 10px 20px; font-size: 1em; background-color: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Entrar
@@ -211,6 +215,16 @@
             }
         };
 
+        // 👁️ ALTERNAR MOSTRAR / OCULTAR PIN
+        function toggleMostrarPin() {
+            const pinInput = document.getElementById('inputPin');
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+            } else {
+                pinInput.type = 'password';
+            }
+        }
+
         // 🔑 VALIDAR EL PIN CON LA API EN LA TOSHIBA
         async function validarPin() {
             const pinInput = document.getElementById('inputPin').value.trim();
@@ -253,13 +267,13 @@
 
         function iniciarApp(nombre) {
             usuarioActual = nombre;
-            const nombreFamilia = localStorage.getItem('nombreFamiliaLista') || 'Nuestra Casa';
 
             document.getElementById('pantallaPin').style.display = 'none';
             document.getElementById('pantallaUsuario').style.display = 'none';
             document.getElementById('panelPrincipal').style.display = 'block';
 
-            document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual + ' (' + nombreFamilia + ')';
+            // Saludo limpio solo con el nombre del usuario
+            document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual;
             document.getElementById('nuevoProducto').focus();
 
             // Carga la lista filtrada por familia desde MariaDB
