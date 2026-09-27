@@ -1,12 +1,18 @@
 {
-  "name": "Lista de la Compra",
-  "short_name": "ListaCompra",
+  "name": "ListApp - Lista de la Compra",
+  "short_name": "ListApp",
   "description": "Aplicación de lista de la compra familiar",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196f3",
   "icons": [
+    {
+      "src": "lista-de-verificacion.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "lista-de-verificacion.png",
       "sizes": "512x512",
