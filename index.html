@@ -133,29 +133,44 @@
     </div>
 
     <!-- PANTALLA REGISTRO: CREAR NUEVA FAMILIA -->
-    <div id="pantallaRegistro" style="display: none; text-align: center; margin-top: 40px;">
+    <div id="pantallaRegistro" style="display: none; text-align: center; margin: 20px auto;">
+
         <h2>🏠 Crear Nuevo Hogar</h2>
-        <p>Introduce el nombre de tu familia y un PIN:</p>
+        <p style="margin-bottom: 20px;">Nombre de familia y PIN:</p>
 
-        <input type="text" id="nuevoNombreFamilia" placeholder="Ej: Casa Abuelos"
-            style="padding: 10px; font-size: 1.1em; width: 220px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px;"><br>
+        <!-- Bloque centrado con ancho fijo de 230px -->
+        <div style="display: inline-block; width: 230px; margin-bottom: 20px;">
 
-        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 20px;">
-            <input type="password" id="nuevoPinFamilia" placeholder="PIN de 4 dígitos" maxlength="10"
-                style="padding: 10px; font-size: 1.1em; text-align: center; width: 150px; border-radius: 8px; border: 1px solid #ccc;">
-            <button type="button" onclick="toggleMostrarNuevoPin()"
-                style="padding: 8px 12px; font-size: 1.1em; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; cursor: pointer;">👁️</button>
+            <!-- Fila 1: Nombre de familia -->
+            <div style="margin-bottom: 12px;">
+                <input type="text" id="nuevoNombreFamilia" placeholder="Ej: Casa García"
+                    style="width: 100%; box-sizing: border-box; padding: 8px;">
+            </div>
+
+            <!-- Fila 2: PIN + botón para mostrarlo -->
+            <div style="display: flex; gap: 8px;">
+                <input type="password" id="nuevoPinFamilia" placeholder="PIN de 4 dígitos"
+                    style="flex: 1; min-width: 0; padding: 8px;">
+                <button type="button" onclick="toggleMostrarNuevoPin()" style="padding: 8px;">👁️</button>
+            </div>
+
         </div>
 
-        <button onclick="registrarFamilia()"
-            style="padding: 10px 20px; font-size: 1em; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">
+
+        <button onclick="registrarFamilia()" style="padding: 10px 20px; font-size: 16px;">
             Crear y Entrar
         </button>
+
+
         <br><br>
-        <a href="#" onclick="cancelarRegistro()" style="color: #666; font-size: 0.9em;">Volver a inicio</a>
+
+
+        <a href="#" onclick="cancelarRegistro(); return false;" style="color: #666; font-size: 14px;">Cancelar</a>
 
         <p id="errorRegistro" style="color: red; margin-top: 15px; display: none;"></p>
+
     </div>
+
 
     <!-- PANTALLA 1: INGRESAR NOMBRE DE USUARIO -->
     <div id="pantallaUsuario" style="display: none; text-align: center; margin-top: 50px;">
