@@ -53,6 +53,33 @@ switch ($method) {
                 echo json_encode(["status" => "error", "mensaje" => "PIN incorrecto"]);
             }
 
+        } elseif ($accion === 'crear_familia') {
+            $nombre = $input['nombre'] ?? '';
+            $pin    = $input['pin'] ?? '';
+
+            if (empty($nombre) || empty($pin)) {
+                echo json_encode(["status" => "error", "mensaje" => "Rellena todos los campos"]);
+            } else {
+                // 1. Comprobar si el PIN ya existe
+                $stmtCheck = $pdo->prepare("SELECT id FROM familias WHERE codigo_pin = :pin");
+                $stmtCheck->execute([':pin' => $pin]);
+
+                if ($stmtCheck->fetch()) {
+                    echo json_encode(["status" => "error", "mensaje" => "Este PIN ya está registrado. Elige otro."]);
+                } else {
+                    // 2. Registrar la nueva familia
+                    $stmtInsert = $pdo->prepare("INSERT INTO familias (nombre, codigo_pin) VALUES (:nombre, :pin)");
+                    $stmtInsert->execute([':nombre' => $nombre, ':pin' => $pin]);
+                    $nuevaId = $pdo->lastInsertId();
+
+                    echo json_encode([
+                        "status" => "ok",
+                        "familia_id" => $nuevaId,
+                        "nombre_familia" => $nombre
+                    ]);
+                }
+            }
+
         } elseif ($accion === 'agregar' && !empty($input['nombre'])) {
             $familia_id = $input['familia_id'] ?? 1;
             $stmt = $pdo->prepare("INSERT INTO productos (nombre, familia_id) VALUES (:nombre, :familia_id)");
@@ -83,9 +110,5 @@ switch ($method) {
         } else {
             echo json_encode(["error" => "Acción no válida"]);
         }
-        break;
-
-    default:
-        echo json_encode(["error" => "Método no permitido"]);
         break;
 }

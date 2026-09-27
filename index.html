@@ -4,145 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="lista-de-verificacion.png">
-    <link rel="apple-touch-icon" href="lista-de-verificacion.png">
+    <title>Lista de la Compra</title>
     <link rel="manifest" href="manifest.json">
-    <title>Lista da Compra</title>
+    <link rel="icon" type="image/png" href="icono_cesta.png">
     <style>
-        \* {
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: Arial, sans-serif;
             max-width: 500px;
-            margin: 10px auto;
-            padding: 10px;
-            background-color: #f4f6f8;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
 
-        #pantallaUsuario {
-            background: white;
-            padding: 24px 18px;
-            border-radius: 10px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        h1,
+        h2 {
             text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .botones-usuario {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        .btn-usuario {
-            width: 100%;
-            padding: 14px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-
-        .btn-usuario:hover {
-            background-color: #0056b3;
-        }
-
-        #panelPrincipal {
-            display: none;
-        }
-
-        .saludo {
-            color: #555;
-            margin-bottom: 12px;
-            font-size: 15px;
-            font-weight: bold;
+            color: #333;
         }
 
         .input-group {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         input[type="text"] {
             flex: 1;
-            min-width: 0;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 10px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
         }
 
-        .btn-add {
-            flex-shrink: 0;
-            padding: 12px 18px;
+        button.btn-principal {
+            padding: 10px 15px;
+            font-size: 16px;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            white-space: nowrap;
         }
 
         ul {
-            list-style: none;
+            list-style-type: none;
             padding: 0;
-            margin: 0;
         }
 
         li {
             background: white;
-            padding: 10px 12px;
-            margin-bottom: 6px;
-            border-radius: 6px;
-            border-left: 5px solid #007bff;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-producto {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .autor {
-            font-size: 11px;
-            color: #6c757d;
-            font-style: italic;
-        }
-
-        .comprado {
-            text-decoration: line-through;
-            opacity: 0.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .btn-borrar {
-            background: #dc3545;
+            background-color: #dc3545;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
+        }
+
+        .btn-usuario {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-
-    <h2>🛒 Lista da Compra</h2>
 
     <!-- PANTALLA 0: INTRODUCIR PIN DE LA FAMILIA -->
     <div id="pantallaPin" style="text-align: center; margin-top: 50px;">
@@ -160,72 +103,88 @@
             Entrar
         </button>
         <p id="errorPin" style="color: red; margin-top: 15px; display: none;"></p>
+
+        <!-- ENLACE PARA CREAR NUEVO HOGAR -->
+        <p style="margin-top: 25px; font-size: 0.9em; color: #555;">
+            ¿Es tu primera vez? <a href="#" onclick="mostrarPantallaRegistro()"
+                style="color: #007bff; text-decoration: underline;">Crear nuevo hogar</a>
+        </p>
     </div>
 
+    <!-- PANTALLA REGISTRO: CREAR NUEVA FAMILIA -->
+    <div id="pantallaRegistro" style="display: none; text-align: center; margin-top: 40px;">
+        <h2>🏠 Crear Nuevo Hogar</h2>
+        <p>Introduce el nombre de tu familia y un PIN:</p>
 
+        <input type="text" id="nuevoNombreFamilia" placeholder="Ej: Casa Abuelos"
+            style="padding: 10px; font-size: 1.1em; width: 220px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px;"><br>
 
-    <!-- 1. Pantalla de elección (solo se muestra si no se ha elegido nombre aún) -->
-    <div id="pantallaUsuario">
-        <h3>¿Quién eres?</h3>
-        <p style="color: #666; font-size: 14px;">Elige tu nombre una sola vez para este dispositivo:</p>
-        <div class="botones-usuario">
-            <button class="btn-usuario" onclick="seleccionarUsuario('Fran')">Fran</button>
-            <button class="btn-usuario" onclick="seleccionarUsuario('Lorena')">Lorena</button>
-            <button class="btn-usuario" onclick="seleccionarUsuario('Daniela')">Daniela</button>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <input type="password" id="nuevoPinFamilia" placeholder="PIN de 4 dígitos" maxlength="10"
+                style="padding: 10px; font-size: 1.1em; text-align: center; width: 150px; border-radius: 8px; border: 1px solid #ccc;">
+            <button type="button" onclick="toggleMostrarNuevoPin()"
+                style="padding: 8px 12px; font-size: 1.1em; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; cursor: pointer;">👁️</button>
         </div>
+
+        <button onclick="registrarFamilia()"
+            style="padding: 10px 20px; font-size: 1em; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Crear y Entrar
+        </button>
+        <br><br>
+        <a href="#" onclick="cancelarRegistro()" style="color: #666; font-size: 0.9em;">Volver a inicio</a>
+
+        <p id="errorRegistro" style="color: red; margin-top: 15px; display: none;"></p>
     </div>
 
-    <!-- 2. Panel principal de la lista -->
-    <div id="panelPrincipal">
-        <div class="saludo" id="textoSaludo"></div>
+    <!-- PANTALLA 1: SELECCIONAR USUARIO -->
+    <div id="pantallaUsuario" style="display: none; text-align: center; margin-top: 50px;">
+        <h2>👤 ¿Quién eres?</h2>
+        <button class="btn-usuario" onclick="seleccionarUsuario('Fran')">Fran</button>
+        <button class="btn-usuario" onclick="seleccionarUsuario('Pareja')">Pareja</button>
+    </div>
+
+    <!-- PANTALLA 2: PANEL PRINCIPAL -->
+    <div id="panelPrincipal" style="display: none;">
+        <h1 id="textoSaludo">🛒 Lista de la Compra</h1>
 
         <div class="input-group">
-            <input type="text" id="nuevoProducto" placeholder="Ej: Leche, huevos, pan..."
-                onkeypress="if(event.key === 'Enter') agregarProducto()">
-            <button class="btn-add" onclick="agregarProducto()">Añadir</button>
+            <input type="text" id="nuevoProducto" placeholder="Añadir producto..."
+                onkeypress="if(event.key==='Enter') agregarProducto()">
+            <button class="btn-principal" onclick="agregarProducto()">Añadir</button>
         </div>
 
-        <ul id="lista">
-            <!-- Productos añadidos -->
-        </ul>
+        <ul id="lista"></ul>
     </div>
 
     <script>
-        // 1. Configuración de la API y Gestión de Estado
         const API_URL = "/lista-compra/api.php";
         let usuarioActual = '';
         let familiaId = localStorage.getItem('familiaIdLista') || null;
 
         window.onload = function () {
             if (!familiaId) {
-                // Si no hay PIN guardado, mostramos la pantalla de PIN
                 document.getElementById('pantallaPin').style.display = 'block';
+                document.getElementById('pantallaRegistro').style.display = 'none';
                 document.getElementById('pantallaUsuario').style.display = 'none';
                 document.getElementById('panelPrincipal').style.display = 'none';
             } else {
-                // Si ya hay PIN guardado, comprobamos si seleccionó usuario
                 const nombreGuardado = localStorage.getItem('usuarioLista');
                 if (nombreGuardado) {
                     iniciarApp(nombreGuardado);
                 } else {
                     document.getElementById('pantallaPin').style.display = 'none';
+                    document.getElementById('pantallaRegistro').style.display = 'none';
                     document.getElementById('pantallaUsuario').style.display = 'block';
                     document.getElementById('panelPrincipal').style.display = 'none';
                 }
             }
         };
 
-        // 👁️ ALTERNAR MOSTRAR / OCULTAR PIN
         function toggleMostrarPin() {
             const pinInput = document.getElementById('inputPin');
-            if (pinInput.type === 'password') {
-                pinInput.type = 'text';
-            } else {
-                pinInput.type = 'password';
-            }
+            pinInput.type = (pinInput.type === 'password') ? 'text' : 'password';
         }
 
-        // 🔑 VALIDAR EL PIN CON LA API EN LA TOSHIBA
         async function validarPin() {
             const pinInput = document.getElementById('inputPin').value.trim();
             const errorDiv = document.getElementById('errorPin');
@@ -245,7 +204,6 @@
                     localStorage.setItem('familiaIdLista', familiaId);
                     localStorage.setItem('nombreFamiliaLista', data.nombre_familia);
 
-                    // Ocultamos pantalla PIN y mostramos la de seleccionar usuario
                     document.getElementById('pantallaPin').style.display = 'none';
                     document.getElementById('pantallaUsuario').style.display = 'block';
                     errorDiv.style.display = 'none';
@@ -260,6 +218,59 @@
             }
         }
 
+        function mostrarPantallaRegistro() {
+            document.getElementById('pantallaPin').style.display = 'none';
+            document.getElementById('pantallaRegistro').style.display = 'block';
+        }
+
+        function cancelarRegistro() {
+            document.getElementById('pantallaRegistro').style.display = 'none';
+            document.getElementById('pantallaPin').style.display = 'block';
+        }
+
+        function toggleMostrarNuevoPin() {
+            const input = document.getElementById('nuevoPinFamilia');
+            input.type = (input.type === 'password') ? 'text' : 'password';
+        }
+
+        async function registrarFamilia() {
+            const nombre = document.getElementById('nuevoNombreFamilia').value.trim();
+            const pin = document.getElementById('nuevoPinFamilia').value.trim();
+            const errorDiv = document.getElementById('errorRegistro');
+
+            if (!nombre || !pin) {
+                errorDiv.innerText = "Por favor, completa el nombre y el PIN.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'crear_familia', nombre: nombre, pin: pin })
+                });
+                const data = await res.json();
+
+                if (data.status === 'ok') {
+                    familiaId = data.familia_id;
+                    localStorage.setItem('familiaIdLista', familiaId);
+                    localStorage.setItem('nombreFamiliaLista', data.nombre_familia);
+
+                    document.getElementById('pantallaRegistro').style.display = 'none';
+                    document.getElementById('pantallaUsuario').style.display = 'block';
+                    errorDiv.style.display = 'none';
+                } else {
+                    errorDiv.innerText = data.mensaje || "Error al crear la familia";
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error al registrar familia:", error);
+                errorDiv.innerText = "Error de conexión con el servidor";
+                errorDiv.style.display = 'block';
+            }
+        }
+
         function seleccionarUsuario(nombre) {
             localStorage.setItem('usuarioLista', nombre);
             iniciarApp(nombre);
@@ -269,18 +280,16 @@
             usuarioActual = nombre;
 
             document.getElementById('pantallaPin').style.display = 'none';
+            document.getElementById('pantallaRegistro').style.display = 'none';
             document.getElementById('pantallaUsuario').style.display = 'none';
             document.getElementById('panelPrincipal').style.display = 'block';
 
-            // Saludo limpio solo con el nombre del usuario
             document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual;
             document.getElementById('nuevoProducto').focus();
 
-            // Carga la lista filtrada por familia desde MariaDB
             cargarProductos();
         }
 
-        // 📥 CONSULTAR LA BASE DE DATOS FILTRANDO POR FAMILIA
         async function cargarProductos() {
             try {
                 const res = await fetch(`${API_URL}?familia_id=${familiaId}`);
@@ -291,7 +300,6 @@
             }
         }
 
-        // 🎨 DIBUJAR LOS PRODUCTOS EN PANTALLA
         function dibujarLista(productos) {
             const ul = document.getElementById('lista');
             ul.innerHTML = '';
@@ -330,7 +338,6 @@
             });
         }
 
-        // ➕ AÑADIR PRODUCTO A LA FAMILIA ACTUAL
         async function agregarProducto() {
             const input = document.getElementById('nuevoProducto');
             const texto = input.value.trim();
@@ -352,7 +359,6 @@
             }
         }
 
-        // 📝 TACHAR / DESTECHAR PRODUCTO
         async function marcarProducto(id, nuevoEstadoComprado) {
             try {
                 await fetch(API_URL, {
@@ -371,7 +377,6 @@
             }
         }
 
-        // 🗑️ ELIMINAR PRODUCTO
         async function eliminarProducto(id) {
             try {
                 await fetch(API_URL, {
@@ -385,7 +390,6 @@
             }
         }
     </script>
-
 </body>
 
 </html>
