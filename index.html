@@ -144,6 +144,22 @@
 
     <h2>🛒 Lista da Compra</h2>
 
+    <!-- PANTALLA 0: INTRODUCIR PIN DE LA FAMILIA -->
+    <div id="pantallaPin" style="text-align: center; margin-top: 50px;">
+        <h2>🔒 Acceso a Lista de la Compra</h2>
+        <p>Introduce el PIN de tu hogar:</p>
+        <input type="password" id="inputPin" placeholder="Ej: 1234" maxlength="10"
+            style="padding: 10px; font-size: 1.2em; text-align: center; width: 150px; border-radius: 8px; border: 1px solid #ccc;">
+        <br><br>
+        <button onclick="validarPin()"
+            style="padding: 10px 20px; font-size: 1em; background-color: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Entrar
+        </button>
+        <p id="errorPin" style="color: red; margin-top: 15px; display: none;"></p>
+    </div>
+
+
+
     <!-- 1. Pantalla de elección (solo se muestra si no se ha elegido nombre aún) -->
     <div id="pantallaUsuario">
         <h3>¿Quién eres?</h3>
@@ -171,16 +187,64 @@
     </div>
 
     <script>
-        // 1. Configuración de la API y Gestión de Usuarios
+        // 1. Configuración de la API y Gestión de Estado
         const API_URL = "/lista-compra/api.php";
         let usuarioActual = '';
+        let familiaId = localStorage.getItem('familiaIdLista') || null;
 
         window.onload = function () {
-            const nombreGuardado = localStorage.getItem('usuarioLista');
-            if (nombreGuardado) {
-                iniciarApp(nombreGuardado);
+            if (!familiaId) {
+                // Si no hay PIN guardado, mostramos la pantalla de PIN
+                document.getElementById('pantallaPin').style.display = 'block';
+                document.getElementById('pantallaUsuario').style.display = 'none';
+                document.getElementById('panelPrincipal').style.display = 'none';
+            } else {
+                // Si ya hay PIN guardado, comprobamos si seleccionó usuario
+                const nombreGuardado = localStorage.getItem('usuarioLista');
+                if (nombreGuardado) {
+                    iniciarApp(nombreGuardado);
+                } else {
+                    document.getElementById('pantallaPin').style.display = 'none';
+                    document.getElementById('pantallaUsuario').style.display = 'block';
+                    document.getElementById('panelPrincipal').style.display = 'none';
+                }
             }
         };
+
+        // 🔑 VALIDAR EL PIN CON LA API EN LA TOSHIBA
+        async function validarPin() {
+            const pinInput = document.getElementById('inputPin').value.trim();
+            const errorDiv = document.getElementById('errorPin');
+
+            if (!pinInput) return;
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'validar_pin', pin: pinInput })
+                });
+                const data = await res.json();
+
+                if (data.status === 'ok') {
+                    familiaId = data.familia_id;
+                    localStorage.setItem('familiaIdLista', familiaId);
+                    localStorage.setItem('nombreFamiliaLista', data.nombre_familia);
+
+                    // Ocultamos pantalla PIN y mostramos la de seleccionar usuario
+                    document.getElementById('pantallaPin').style.display = 'none';
+                    document.getElementById('pantallaUsuario').style.display = 'block';
+                    errorDiv.style.display = 'none';
+                } else {
+                    errorDiv.innerText = data.mensaje || "PIN incorrecto";
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error al validar el PIN:", error);
+                errorDiv.innerText = "Error de conexión con el servidor";
+                errorDiv.style.display = 'block';
+            }
+        }
 
         function seleccionarUsuario(nombre) {
             localStorage.setItem('usuarioLista', nombre);
@@ -189,19 +253,23 @@
 
         function iniciarApp(nombre) {
             usuarioActual = nombre;
+            const nombreFamilia = localStorage.getItem('nombreFamiliaLista') || 'Nuestra Casa';
+
+            document.getElementById('pantallaPin').style.display = 'none';
             document.getElementById('pantallaUsuario').style.display = 'none';
             document.getElementById('panelPrincipal').style.display = 'block';
-            document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual;
+
+            document.getElementById('textoSaludo').innerText = '👋🏼 Hola, ' + usuarioActual + ' (' + nombreFamilia + ')';
             document.getElementById('nuevoProducto').focus();
 
-            // Carga la lista inicial desde MariaDB
+            // Carga la lista filtrada por familia desde MariaDB
             cargarProductos();
         }
 
-        // 📥 1. CONSULTAR LA BASE DE DATOS EN LA TOSHIBA
+        // 📥 CONSULTAR LA BASE DE DATOS FILTRANDO POR FAMILIA
         async function cargarProductos() {
             try {
-                const res = await fetch(API_URL);
+                const res = await fetch(`${API_URL}?familia_id=${familiaId}`);
                 const productos = await res.json();
                 dibujarLista(productos);
             } catch (error) {
@@ -209,10 +277,10 @@
             }
         }
 
-        // 🎨 2. DIBUJAR LOS PRODUCTOS EN PANTALLA
+        // 🎨 DIBUJAR LOS PRODUCTOS EN PANTALLA
         function dibujarLista(productos) {
             const ul = document.getElementById('lista');
-            ul.innerHTML = ''; // Limpia la lista antes de redibujar
+            ul.innerHTML = '';
 
             productos.forEach(function (prod) {
                 const li = document.createElement('li');
@@ -220,7 +288,6 @@
 
                 let htmlProducto = '<div style="display: flex; align-items: center; gap: 10px;">';
 
-                // Casilla de verificación (Checkbox)
                 htmlProducto += '<input type="checkbox" ';
                 if (estaComprado) {
                     htmlProducto += 'checked ';
@@ -229,7 +296,6 @@
                 htmlProducto += 'style="width: 20px; height: 20px; cursor: pointer;" ';
                 htmlProducto += 'title="Marcar como comprado">';
 
-                // Nombre del producto (Tachado si está comprado)
                 htmlProducto += '<div class="info-producto" style="cursor: pointer;" onclick="marcarProducto(' + prod.id + ', ' + (!estaComprado) + ')">';
 
                 if (estaComprado) {
@@ -238,14 +304,11 @@
                     htmlProducto += '<strong>' + prod.nombre + '</strong>';
                 }
 
-                // Nota de quién lo compró
                 if (estaComprado && prod.comprado_por) {
                     htmlProducto += '<span class="autor" style="font-size: 0.8em; color: #777; display: block;">Comprado por: ' + prod.comprado_por + '</span>';
                 }
 
                 htmlProducto += '</div></div>';
-
-                // Botón de eliminar
                 htmlProducto += '<button class="btn-borrar" onclick="eliminarProducto(' + prod.id + ')">Borrar</button>';
 
                 li.innerHTML = htmlProducto;
@@ -253,7 +316,7 @@
             });
         }
 
-        // ➕ 3. AÑADIR PRODUCTO A MARIADB
+        // ➕ AÑADIR PRODUCTO A LA FAMILIA ACTUAL
         async function agregarProducto() {
             const input = document.getElementById('nuevoProducto');
             const texto = input.value.trim();
@@ -264,18 +327,18 @@
                 await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ accion: 'agregar', nombre: texto })
+                    body: JSON.stringify({ accion: 'agregar', nombre: texto, familia_id: familiaId })
                 });
 
                 input.value = '';
                 input.focus();
-                cargarProductos(); // Recarga desde la Toshiba
+                cargarProductos();
             } catch (error) {
                 console.error("Error al añadir producto:", error);
             }
         }
 
-        // 📝 4. TACHAR / DESTECHAR PRODUCTO EN MARIADB
+        // 📝 TACHAR / DESTECHAR PRODUCTO
         async function marcarProducto(id, nuevoEstadoComprado) {
             try {
                 await fetch(API_URL, {
@@ -288,13 +351,13 @@
                         comprado_por: usuarioActual
                     })
                 });
-                cargarProductos(); // Recarga desde la Toshiba
+                cargarProductos();
             } catch (error) {
                 console.error("Error al marcar producto:", error);
             }
         }
 
-        // 🗑️ 5. ELIMINAR PRODUCTO DE MARIADB
+        // 🗑️ ELIMINAR PRODUCTO
         async function eliminarProducto(id) {
             try {
                 await fetch(API_URL, {
@@ -302,7 +365,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ accion: 'eliminar', id: id })
                 });
-                cargarProductos(); // Recarga desde la Toshiba
+                cargarProductos();
             } catch (error) {
                 console.error("Error al eliminar producto:", error);
             }
