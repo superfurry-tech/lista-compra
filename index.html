@@ -8,74 +8,95 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icono_cesta.png">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             max-width: 500px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
             background-color: #f9f9f9;
         }
 
         h1,
         h2 {
-            text-align: center;
             color: #333;
+        }
+
+        h2 {
+            text-align: center;
         }
 
         .input-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
         }
 
-        input[type="text"] {
+        input[type="text"],
+        input[type="password"] {
             flex: 1;
-            padding: 10px;
-            font-size: 16px;
+            padding: 9px 12px;
+            font-size: 15px;
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff;
         }
 
         button.btn-principal {
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 9px 15px;
+            font-size: 15px;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
 
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
             background: white;
             margin-bottom: 10px;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            word-break: break-word;
         }
 
         .btn-borrar {
             background-color: #dc3545;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 6px 10px;
+            font-size: 13px;
             border-radius: 6px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .btn-usuario {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             margin-bottom: 10px;
-            font-size: 1.2em;
+            font-size: 1.1em;
             background-color: #007bff;
             color: white;
             border: none;
@@ -153,7 +174,7 @@
 
     <!-- PANTALLA 2: PANEL PRINCIPAL -->
     <div id="panelPrincipal" style="display: none;">
-        <h1 id="textoSaludo">🛒 Lista de la Compra</h1>
+        <h1 id="textoSaludo" style="text-align: left; font-size: 1.4em; margin-bottom: 20px;">🛒 Lista de la Compra</h1>
 
         <div class="input-group">
             <input type="text" id="nuevoProducto" placeholder="Añadir producto..."
@@ -279,11 +300,11 @@
             }
         }
 
-        function guardarNombreUsuario() { 
-            const nombreInput = document.getElementById('inputNombreUsuario').value.trim(); 
-            if (!nombreInput) return; 
-            localStorage.setItem('usuarioLista', nombreInput); 
-            iniciarApp(nombreInput); 
+        function guardarNombreUsuario() {
+            const nombreInput = document.getElementById('inputNombreUsuario').value.trim();
+            if (!nombreInput) return;
+            localStorage.setItem('usuarioLista', nombreInput);
+            iniciarApp(nombreInput);
         }
 
         function seleccionarUsuario(nombre) {
