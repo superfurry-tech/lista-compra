@@ -136,11 +136,19 @@
         <p id="errorRegistro" style="color: red; margin-top: 15px; display: none;"></p>
     </div>
 
-    <!-- PANTALLA 1: SELECCIONAR USUARIO -->
+    <!-- PANTALLA 1: INGRESAR NOMBRE DE USUARIO -->
     <div id="pantallaUsuario" style="display: none; text-align: center; margin-top: 50px;">
         <h2>👤 ¿Quién eres?</h2>
-        <button class="btn-usuario" onclick="seleccionarUsuario('Fran')">Fran</button>
-        <button class="btn-usuario" onclick="seleccionarUsuario('Pareja')">Pareja</button>
+        <p>Escribe tu nombre para saber quién añade o compra los productos:</p>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 15px;"> <input
+                type="text" id="inputNombreUsuario" placeholder="Ej: María, Juan, Papá..."
+                style="padding: 10px; font-size: 1.1em; text-align: center; width: 220px; border-radius: 8px; border: 1px solid #ccc;"
+                onkeypress="if(event.key==='Enter') guardarNombreUsuario()">
+        </div>
+        <button onclick="guardarNombreUsuario()"
+            style="padding: 10px 20px; font-size: 1em; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Entrar a la Lista
+        </button>
     </div>
 
     <!-- PANTALLA 2: PANEL PRINCIPAL -->
@@ -269,6 +277,13 @@
                 errorDiv.innerText = "Error de conexión con el servidor";
                 errorDiv.style.display = 'block';
             }
+        }
+
+        function guardarNombreUsuario() { 
+            const nombreInput = document.getElementById('inputNombreUsuario').value.trim(); 
+            if (!nombreInput) return; 
+            localStorage.setItem('usuarioLista', nombreInput); 
+            iniciarApp(nombreInput); 
         }
 
         function seleccionarUsuario(nombre) {
