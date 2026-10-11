@@ -9,10 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$host = 'localhost';
-$db   = 'lista_compra';
-$user = 'fran';
-$pass = 'hpunki';
+$config = require '/etc/listapp/db.php';
+
+$host = $config['host'];
+$db   = $config['dbname'];
+$user = $config['user'];
+$pass = $config['password'];
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
